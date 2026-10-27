@@ -1,0 +1,13 @@
+# Firebase
+.firebase/
+firebase-debug.log*
+firebase-debug.*.log*
+.runtimeconfig.json
+
+# 도구 산출물
+.playwright-mcp/
+
+# OS
+Thumbs.db
+desktop.ini
+.DS_Store
