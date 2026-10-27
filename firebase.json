@@ -5,9 +5,11 @@
     "ignore": [
       "firebase.json",
       "**/.*",
+      "**/.*/**",
       "**/node_modules/**",
       "평안이캐릭터모음/**",
-      "README.md"
+      "README.md",
+      "*.log"
     ],
     "cleanUrls": true,
     "headers": [
