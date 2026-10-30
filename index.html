@@ -4,7 +4,7 @@
 <meta charset="utf-8">
 <meta name="viewport" content="width=device-width, initial-scale=1">
 <title>평안이</title>
-<meta name="description" content="잔잔한 물결을 닮은 휴식 친구 평안이의 캐릭터 소개 — 양평을 아끼는 마음으로 만든 비공식 창작 캐릭터입니다.">
+<meta name="description" content="잔잔한 물결을 닮은 휴식 친구 평안이의 캐릭터 소개 — AI행정앱제작소에서 만든 임의 캐릭터이며, 양평군의 공식 캐릭터가 아닌 비공식 창작 캐릭터입니다.">
 <link rel="icon" href="data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 32 32'%3E%3Cpath d='M16 3C10 11 6 15.5 6 20a10 10 0 0 0 20 0c0-4.5-4-9-10-17z' fill='%238DD3F0' stroke='%2316344F' stroke-width='2.5' stroke-linejoin='round'/%3E%3C/svg%3E">
 <link rel="preconnect" href="https://fonts.googleapis.com">
 <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
@@ -92,19 +92,67 @@ a{color:inherit}
 
 .wrap{max-width:var(--max);margin:0 auto;padding:0 var(--pad)}
 
+/* ---------- 최상단 고지 ---------- */
+.topnotice{
+  background:var(--navy);
+  color:#F3FBFA;
+  font-size:12.5px;
+  line-height:1.5;
+  font-weight:300;
+  letter-spacing:-.01em;
+}
+.topnotice .wrap{padding-top:9px;padding-bottom:9px}
+.topnotice strong{font-weight:500}
+@media (max-width:620px){ .topnotice{font-size:12px} }
+
 /* ---------- 상단 바 ---------- */
 .topbar{
   position:sticky;top:0;z-index:40;
   background:color-mix(in srgb, var(--pool) 88%, transparent);
   backdrop-filter:blur(10px);
   border-bottom:1px solid color-mix(in srgb, var(--line) 25%, transparent);
+  transition:background-color .15s linear, box-shadow .15s linear;
 }
-.topbar .wrap{display:flex;align-items:center;gap:20px;height:56px}
-.brand{font-family:"Gowun Dodum",sans-serif;font-size:19px;letter-spacing:-.01em}
-.topnav{margin-left:auto;display:flex;gap:18px;font-size:13.5px;color:var(--ink-dim)}
-.topnav a{text-decoration:none;padding:4px 0;border-bottom:1.5px solid transparent}
-.topnav a:hover{color:var(--ink);border-bottom-color:var(--sky)}
-@media (max-width:620px){ .topnav{gap:13px;font-size:12.5px} .brand{font-size:17px} }
+/* 내려가기 시작하면 바탕을 더 채운다 — 그림 위를 지날 때도 글자가 읽히도록 */
+.topbar.is-stuck{
+  background:color-mix(in srgb, var(--pool) 96%, transparent);
+  box-shadow:0 2px 14px color-mix(in srgb, var(--navy) 14%, transparent);
+}
+.topbar .wrap{display:flex;align-items:center;gap:16px;height:56px}
+.brand{
+  display:flex;align-items:center;gap:8px;flex:0 0 auto;
+  font-family:"Gowun Dodum",sans-serif;font-size:19px;letter-spacing:-.01em;
+  text-decoration:none;
+}
+.brand svg{width:22px;height:22px;flex:0 0 auto}
+.brand svg path{fill:var(--sky);stroke:var(--glyph-stroke);stroke-width:2.5;stroke-linejoin:round}
+.topnav{
+  margin-left:auto;display:flex;align-items:center;gap:4px;
+  font-size:13.5px;color:var(--ink-dim);
+  overflow-x:auto;overscroll-behavior-x:contain;scrollbar-width:none;
+}
+.topnav::-webkit-scrollbar{display:none}
+.topnav a{
+  flex:0 0 auto;text-decoration:none;white-space:nowrap;
+  padding:7px 11px;border-radius:999px;
+  border:1.5px solid transparent;
+  transition:color .12s linear, background-color .12s linear, border-color .12s linear;
+}
+.topnav a:hover{color:var(--ink);border-color:color-mix(in srgb,var(--line) 35%,transparent)}
+/* 지금 보고 있는 자리 */
+.topnav a[aria-current]{color:var(--ink);background:color-mix(in srgb,var(--sky) 38%,transparent);border-color:color-mix(in srgb,var(--line) 30%,transparent)}
+@media (max-width:620px){
+  .topbar .wrap{gap:10px}
+  .topnav{gap:2px;font-size:12.5px}
+  .topnav a{padding:6px 9px}
+  .brand{font-size:17px}
+  .brand svg{width:19px;height:19px}
+}
+@media (max-width:380px){ .brand span{display:none} }
+
+/* 바로가기로 뛰어도 제목이 상단 바에 가리지 않게 */
+.section,.hero{scroll-margin-top:72px}
+@media (prefers-reduced-motion:no-preference){ html{scroll-behavior:smooth} }
 
 /* ---------- 벤토 공통 ---------- */
 .bento + .bento{margin-top:var(--gap)}   /* 장면 묶음들이 하나의 격자처럼 이어지도록 */
@@ -161,25 +209,48 @@ a{color:inherit}
 .t-teal {background:var(--tile-d-bg);color:var(--tile-d-fg)}
 
 /* ---------- 히어로 ---------- */
-.hero{margin:40px 0 0}
-.hero-name{grid-column:1/span 7;grid-row:1/span 4;background:var(--tile-a-bg);color:var(--tile-a-fg)}
+.hero{margin:34px 0 0}
+/* 첫 화면 한 덩어리: 글 7칸 + 그림 5칸이 같은 높이로 나란히 선다 */
+.hero-name{grid-column:1/span 7;grid-row:1/span 6;background:var(--tile-a-bg);color:var(--tile-a-fg)}
 /* 칸 바탕을 그림 바탕색과 똑같이 맞춘다 — 그림이 액자 속에 든 것처럼 보이지 않게 */
-.hero-portrait{grid-column:8/span 5;grid-row:1/span 8;background:#FCFEFE;display:grid;place-items:center;padding:18px}
-.hero-palette{grid-column:1/span 4;grid-row:5/span 4}
-.hero-stats{grid-column:5/span 3;grid-row:5/span 4;background:var(--tile-b-bg);color:var(--tile-b-fg)}
+.hero-portrait{grid-column:8/span 5;grid-row:1/span 6;background:#FCFEFE;display:grid;place-items:center;padding:18px}
+.hero-palette{grid-column:1/span 6;grid-row:7/span 2}
+.hero-stats{grid-column:7/span 6;grid-row:7/span 2;background:var(--tile-b-bg);color:var(--tile-b-fg)}
 
+/* 아래 띠 두 칸은 낮고 넓다 — 색 견본과 숫자를 가로로 눕힌다 */
+.hero-palette .swatches{grid-template-columns:repeat(3,minmax(0,1fr))}
+
+.hero-name{gap:0;padding:30px 32px}
 .hero-name h1{
   font-family:"Gowun Dodum",sans-serif;font-weight:400;
   font-size:clamp(3.6rem,10vw,7rem);
   line-height:.95;letter-spacing:-.045em;
-  margin:0 0 .15em;
+  margin:0 0 .12em;
 }
-.tagline{
+/* .tile--text p 보다 구체적으로 — 그러지 않으면 여백과 색이 되돌아간다 */
+.hero-name p.tagline{
   font-family:"Gowun Dodum",sans-serif;
-  font-size:clamp(1.05rem,2.3vw,1.4rem);
-  letter-spacing:-.01em;margin:0 0 14px;
+  font-size:clamp(1.25rem,2.8vw,1.75rem);
+  line-height:1.4;letter-spacing:-.015em;
+  color:inherit;font-weight:400;margin:0 0 14px;max-width:18em;
 }
-.hero-name p.lede{color:color-mix(in srgb,currentColor 72%,transparent);font-weight:300;line-height:1.9;margin:0;max-width:30em}
+.hero-name p.lede{color:color-mix(in srgb,currentColor 72%,transparent);font-weight:300;line-height:1.9;margin:0;max-width:26em}
+
+/* 버튼 — 캐릭터와 같은 외곽선, 눌리면 살짝 내려간다 */
+.cta{display:flex;flex-wrap:wrap;gap:10px;margin:22px 0 0}
+.btn{
+  display:inline-flex;align-items:center;justify-content:center;
+  font-family:"Gowun Dodum",sans-serif;font-size:1.02rem;letter-spacing:-.01em;
+  padding:13px 24px 14px;border-radius:999px;
+  text-decoration:none;cursor:pointer;
+  transition:transform .08s ease-out, background-color .12s linear, border-color .12s linear;
+}
+.btn-go{background:var(--sky);color:var(--navy);border:2.5px solid var(--navy)}
+.btn-go:hover{background:#A3DCF3}
+.btn-sub{background:transparent;color:inherit;border:2.5px solid color-mix(in srgb,currentColor 38%,transparent)}
+.btn-sub:hover{border-color:color-mix(in srgb,currentColor 80%,transparent)}
+.btn:active{transform:translateY(1.5px)}
+.hero-name p.hero-fine{margin:18px 0 0;font-size:12.5px;line-height:1.65;font-weight:300;color:color-mix(in srgb,currentColor 58%,transparent);max-width:30em}
 
 /* 물결 — 페이지에서 유일하게 움직이는 것 */
 .portrait-stage{width:100%;height:100%;display:flex;flex-direction:column;align-items:center;justify-content:center}
@@ -212,7 +283,7 @@ a{color:inherit}
 .sw span{display:block;color:color-mix(in srgb,currentColor 62%,transparent);font-size:11px;font-variant-numeric:tabular-nums}
 
 /* 숫자 */
-.stats{display:flex;flex-direction:column;gap:14px}
+.stats{display:flex;flex-wrap:wrap;gap:14px clamp(18px,3.4vw,40px)}
 .stat{display:flex;align-items:baseline;gap:9px}
 .stat b{font-family:"Gowun Dodum",sans-serif;font-weight:400;font-size:2.1rem;line-height:1;letter-spacing:-.03em}
 .stat span{font-size:13px}
@@ -304,10 +375,15 @@ footer p{margin:0;max-width:46em}
 @media (max-width:860px){
   :root{--cols:6;--gap:10px;--pad:16px}
   .pad{padding:20px 20px}
-  .hero-name{grid-column:1/-1;grid-row:auto}
-  .hero-portrait{grid-column:1/-1;grid-row:span 6}
+  .hero-name{grid-column:1/-1;grid-row:auto;padding:24px 20px 26px}
+  .hero-portrait{grid-column:1/-1;grid-row:span 8}
   .hero-palette{grid-column:1/-1;grid-row:auto}
+  .hero-palette .swatches{grid-template-columns:1fr 1fr}
   .hero-stats{grid-column:1/-1;grid-row:auto}
+  .portrait-stage img,.ripples{max-width:300px}
+  .ripples{margin-top:-42px}
+  .cta{margin-top:18px}
+  .btn{flex:1 1 auto;padding:12px 18px 13px;font-size:.98rem}
   .t6x6,.t6x3{grid-column:1/-1;grid-row:auto}
   .half{grid-column:1/-1}
   .stats{flex-direction:row;flex-wrap:wrap;gap:12px 26px}
@@ -318,10 +394,18 @@ footer p{margin:0;max-width:46em}
 </head>
 <body>
 
+<div class="topnotice">
+  <div class="wrap"><strong>&ldquo;평안이 캐릭터&rdquo;</strong>는 AI행정앱제작소에서 만든 임의 캐릭터입니다.</div>
+</div>
+
 <header class="topbar">
   <div class="wrap">
-    <span class="brand">평안이</span>
-    <nav class="topnav">
+    <a class="brand" href="#top" aria-label="맨 위로">
+      <svg viewBox="0 0 32 32" aria-hidden="true"><path d="M16 3C10 11 6 15.5 6 20a10 10 0 0 0 20 0c0-4.5-4-9-10-17z"/></svg>
+      <span>평안이</span>
+    </a>
+    <nav class="topnav" aria-label="주요 화면">
+      <a href="#top">소개</a>
       <a href="#origin">이름</a>
       <a href="#design">생김새</a>
       <a href="#day">하루</a>
@@ -333,11 +417,16 @@ footer p{margin:0;max-width:46em}
 <main class="wrap">
 
   <!-- ===== 히어로 ===== -->
-  <section class="bento hero" aria-labelledby="name">
+  <section class="bento hero" id="top" aria-labelledby="name">
     <div class="tile is-lead hero-name tile--text pad">
       <h1 id="name">평안이</h1>
-      <p class="tagline">잔잔한 물결을 닮은 휴식 친구</p>
-      <p class="lede">양평의 '평'을 맡은 물방울입니다. 머리 끝은 파도가 말려 올라간 모양이고, 옆에는 연꽃 한 송이가 늘 붙어 있습니다. 서두르는 법이 없어서, 보고 있으면 숨이 한 박자 느려집니다.</p>
+      <p class="tagline">모두가 평안하기를.</p>
+      <p class="lede">양평의 '평'을 맡은 물방울입니다. 서두르는 법이 없어서, 보고 있으면 숨이 한 박자 느려집니다.</p>
+      <div class="cta">
+        <a class="btn btn-go" href="#day">평안이의 하루 보기</a>
+        <a class="btn btn-sub" href="#sheet">캐릭터 시트 보기</a>
+      </div>
+      <p class="hero-fine">&ldquo;평안이 캐릭터&rdquo;는 AI행정앱제작소에서 만든 임의 캐릭터입니다. 양평군의 공식 캐릭터가 아닌 비공식 창작 캐릭터입니다.</p>
     </div>
 
     <div class="tile is-lead hero-portrait">
@@ -416,7 +505,7 @@ footer p{margin:0;max-width:46em}
 
       <div class="tile full tile--text pad notice">
         <h3>공식 캐릭터는 아닙니다</h3>
-        <p>평안이는 양평군의 공식 캐릭터가 아니라, 양평을 아끼는 마음으로 만든 비공식 창작 캐릭터입니다. 양평군이나 양춘이와는 공식적인 관계가 없습니다.</p>
+        <p>&ldquo;평안이 캐릭터&rdquo;는 AI행정앱제작소에서 만든 임의 캐릭터입니다. 양평군의 공식 캐릭터가 아니며, 양평을 아끼는 마음으로 만든 비공식 창작 캐릭터로서 양평군이나 양춘이와는 공식적인 관계가 없습니다.</p>
       </div>
     </div>
   </section>
@@ -441,22 +530,22 @@ footer p{margin:0;max-width:46em}
       </div>
 
       <figure class="tile half strip">
-        <div class="scroller"><img src="assets/sheet/details.jpg" alt="물결 머리와 연꽃, 얼굴과 볼터치, 이중 물결, 짧은 발을 확대한 네 장면" loading="lazy"></div>
+        <div class="scroller"><img src="assets/sheet/details.jpg" width="600" height="168" alt="물결 머리와 연꽃, 얼굴과 볼터치, 이중 물결, 짧은 발을 확대한 네 장면" loading="lazy"></div>
         <figcaption>가까이 본 네 부분</figcaption>
       </figure>
 
       <figure class="tile full strip">
-        <div class="scroller"><img src="assets/sheet/turnaround.jpg" alt="정면, 좌측면, 우측면, 후면, 앞 45도, 뒤 45도로 본 평안이" loading="lazy"></div>
+        <div class="scroller"><img src="assets/sheet/turnaround.jpg" width="1124" height="258" alt="정면, 좌측면, 우측면, 후면, 앞 45도, 뒤 45도로 본 평안이" loading="lazy"></div>
         <figcaption>여섯 방향 — 어느 쪽에서 봐도 물방울입니다</figcaption>
       </figure>
 
       <figure class="tile full strip">
-        <div class="scroller"><img src="assets/sheet/faces.jpg" alt="기본, 행복, 평온, 놀람, 윙크, 졸림, 궁금, 걱정, 슬픔, 응원 표정" loading="lazy"></div>
+        <div class="scroller"><img src="assets/sheet/faces.jpg" width="1124" height="160" alt="기본, 행복, 평온, 놀람, 윙크, 졸림, 궁금, 걱정, 슬픔, 응원 표정" loading="lazy"></div>
         <figcaption>표정 열 가지 — 기본, 행복, 평온, 놀람, 윙크, 졸림, 궁금, 걱정, 슬픔, 응원</figcaption>
       </figure>
 
       <figure class="tile full strip">
-        <div class="scroller"><img src="assets/sheet/poses.jpg" alt="걷기, 달리기, 점프, 손인사, 공손한 인사, 하트, 안내, 휴식 동작" loading="lazy"></div>
+        <div class="scroller"><img src="assets/sheet/poses.jpg" width="1124" height="200" alt="걷기, 달리기, 점프, 손인사, 공손한 인사, 하트, 안내, 휴식 동작" loading="lazy"></div>
         <figcaption>동작 여덟 가지 — 걷기, 달리기, 점프, 손인사, 공손한 인사, 하트, 안내, 휴식</figcaption>
       </figure>
     </div>
@@ -478,19 +567,19 @@ footer p{margin:0;max-width:46em}
           <p>노트북을 열고, 키보드를 두드리고, 다 끝내면 두 팔을 번쩍 듭니다. 화면 앞에서도 서두르는 법은 없습니다.</p>
         </div>
       </div>
-      <button class="tile tile--art s" data-cap="노트북 작업"><img src="assets/scenes/s01.jpg" alt="앉은뱅이책상에서 노트북으로 신나게 작업하는 평안이" loading="lazy"><span class="cap">노트북 작업</span></button>
-      <button class="tile tile--art s" data-cap="키보드 두드리기"><img src="assets/scenes/s02.jpg" alt="키보드를 두드리는 평안이" loading="lazy"><span class="cap">키보드 두드리기</span></button>
-      <button class="tile tile--art s" data-cap="작업 끝, 두 팔 번쩍"><img src="assets/scenes/s03.jpg" alt="노트북 작업을 끝내고 환호하는 평안이" loading="lazy"><span class="cap">작업 끝, 두 팔 번쩍</span></button>
-      <button class="tile tile--art s" data-cap="마우스를 잡고"><img src="assets/scenes/s04.jpg" alt="마우스를 잡은 호기심 어린 평안이" loading="lazy"><span class="cap">마우스를 잡고</span></button>
-      <button class="tile tile--art m is-lead" data-cap="집중해서 타이핑"><img src="assets/scenes/s05.jpg" alt="데스크톱 앞에서 집중해 타이핑하는 평안이" loading="lazy"><span class="cap">집중해서 타이핑</span></button>
-      <button class="tile tile--art s" data-cap="마무리하고 환호"><img src="assets/scenes/s06.jpg" alt="노트북을 마치고 환호하는 평안이" loading="lazy"><span class="cap">마무리하고 환호</span></button>
-      <button class="tile tile--art s" data-cap="헤드셋 쓰고 화상회의"><img src="assets/scenes/s07.jpg" alt="헤드셋을 쓰고 화상회의하는 평안이" loading="lazy"><span class="cap">헤드셋 쓰고 화상회의</span></button>
-      <button class="tile tile--art s" data-cap="노트북 옆에서 메모"><img src="assets/scenes/s08.jpg" alt="노트북 옆에서 메모하는 평안이" loading="lazy"><span class="cap">노트북 옆에서 메모</span></button>
-      <button class="tile tile--art s" data-cap="마우스 조작"><img src="assets/scenes/s09.jpg" alt="마우스를 조작하며 미소 짓는 평안이" loading="lazy"><span class="cap">마우스 조작</span></button>
-      <button class="tile tile--art s" data-cap="즐거운 통화"><img src="assets/scenes/s10.jpg" alt="스마트폰으로 즐겁게 통화하는 평안이" loading="lazy"><span class="cap">즐거운 통화</span></button>
-      <button class="tile tile--art s" data-cap="메시지 쓰기"><img src="assets/scenes/s11.jpg" alt="미소 지으며 메시지를 쓰는 평안이" loading="lazy"><span class="cap">메시지 쓰기</span></button>
-      <button class="tile tile--art s" data-cap="윙크하며 셀카"><img src="assets/scenes/s12.jpg" alt="윙크하며 셀카를 찍는 평안이" loading="lazy"><span class="cap">윙크하며 셀카</span></button>
-      <button class="tile tile--art s" data-cap="화면 보며 웃기"><img src="assets/scenes/s13.jpg" alt="스마트폰을 보며 웃는 평안이" loading="lazy"><span class="cap">화면 보며 웃기</span></button>
+      <button class="tile tile--art s" data-cap="노트북 작업"><img src="assets/scenes/s01.jpg" width="800" height="800" alt="앉은뱅이책상에서 노트북으로 신나게 작업하는 평안이" loading="lazy"><span class="cap">노트북 작업</span></button>
+      <button class="tile tile--art s" data-cap="키보드 두드리기"><img src="assets/scenes/s02.jpg" width="800" height="800" alt="키보드를 두드리는 평안이" loading="lazy"><span class="cap">키보드 두드리기</span></button>
+      <button class="tile tile--art s" data-cap="작업 끝, 두 팔 번쩍"><img src="assets/scenes/s03.jpg" width="800" height="800" alt="노트북 작업을 끝내고 환호하는 평안이" loading="lazy"><span class="cap">작업 끝, 두 팔 번쩍</span></button>
+      <button class="tile tile--art s" data-cap="마우스를 잡고"><img src="assets/scenes/s04.jpg" width="800" height="800" alt="마우스를 잡은 호기심 어린 평안이" loading="lazy"><span class="cap">마우스를 잡고</span></button>
+      <button class="tile tile--art m is-lead" data-cap="집중해서 타이핑"><img src="assets/scenes/s05.jpg" width="800" height="800" alt="데스크톱 앞에서 집중해 타이핑하는 평안이" loading="lazy"><span class="cap">집중해서 타이핑</span></button>
+      <button class="tile tile--art s" data-cap="마무리하고 환호"><img src="assets/scenes/s06.jpg" width="800" height="800" alt="노트북을 마치고 환호하는 평안이" loading="lazy"><span class="cap">마무리하고 환호</span></button>
+      <button class="tile tile--art s" data-cap="헤드셋 쓰고 화상회의"><img src="assets/scenes/s07.jpg" width="800" height="800" alt="헤드셋을 쓰고 화상회의하는 평안이" loading="lazy"><span class="cap">헤드셋 쓰고 화상회의</span></button>
+      <button class="tile tile--art s" data-cap="노트북 옆에서 메모"><img src="assets/scenes/s08.jpg" width="800" height="800" alt="노트북 옆에서 메모하는 평안이" loading="lazy"><span class="cap">노트북 옆에서 메모</span></button>
+      <button class="tile tile--art s" data-cap="마우스 조작"><img src="assets/scenes/s09.jpg" width="800" height="800" alt="마우스를 조작하며 미소 짓는 평안이" loading="lazy"><span class="cap">마우스 조작</span></button>
+      <button class="tile tile--art s" data-cap="즐거운 통화"><img src="assets/scenes/s10.jpg" width="800" height="800" alt="스마트폰으로 즐겁게 통화하는 평안이" loading="lazy"><span class="cap">즐거운 통화</span></button>
+      <button class="tile tile--art s" data-cap="메시지 쓰기"><img src="assets/scenes/s11.jpg" width="800" height="800" alt="미소 지으며 메시지를 쓰는 평안이" loading="lazy"><span class="cap">메시지 쓰기</span></button>
+      <button class="tile tile--art s" data-cap="윙크하며 셀카"><img src="assets/scenes/s12.jpg" width="800" height="800" alt="윙크하며 셀카를 찍는 평안이" loading="lazy"><span class="cap">윙크하며 셀카</span></button>
+      <button class="tile tile--art s" data-cap="화면 보며 웃기"><img src="assets/scenes/s13.jpg" width="800" height="800" alt="스마트폰을 보며 웃는 평안이" loading="lazy"><span class="cap">화면 보며 웃기</span></button>
     </div>
 
     <!-- 작은 여행 -->
@@ -502,12 +591,12 @@ footer p{margin:0;max-width:46em}
           <p>지도를 펼치고 쌍안경을 듭니다. 멀리 가지는 않지만 매번 처음 가는 길처럼 걷습니다.</p>
         </div>
       </div>
-      <button class="tile tile--art s" data-cap="배낭 메고 출발"><img src="assets/scenes/s14.jpg" alt="배낭을 메고 떠나는 평안이" loading="lazy"><span class="cap">배낭 메고 출발</span></button>
-      <button class="tile tile--art s" data-cap="캐리어 끌고 손인사"><img src="assets/scenes/s15.jpg" alt="캐리어를 끌고 손인사하는 평안이" loading="lazy"><span class="cap">캐리어 끌고 손인사</span></button>
-      <button class="tile tile--art s" data-cap="지도 펼치기"><img src="assets/scenes/s16.jpg" alt="지도를 펼친 평안이" loading="lazy"><span class="cap">지도 펼치기</span></button>
-      <button class="tile tile--art s" data-cap="길 확인하기"><img src="assets/scenes/s17.jpg" alt="스마트폰 지도를 확인하는 평안이" loading="lazy"><span class="cap">길 확인하기</span></button>
-      <button class="tile tile--art s" data-cap="풍경 촬영"><img src="assets/scenes/s18.jpg" alt="카메라를 들고 풍경을 찍는 평안이" loading="lazy"><span class="cap">풍경 촬영</span></button>
-      <button class="tile tile--art s" data-cap="쌍안경으로 보기"><img src="assets/scenes/s19.jpg" alt="쌍안경을 든 평안이" loading="lazy"><span class="cap">쌍안경으로 보기</span></button>
+      <button class="tile tile--art s" data-cap="배낭 메고 출발"><img src="assets/scenes/s14.jpg" width="800" height="800" alt="배낭을 메고 떠나는 평안이" loading="lazy"><span class="cap">배낭 메고 출발</span></button>
+      <button class="tile tile--art s" data-cap="캐리어 끌고 손인사"><img src="assets/scenes/s15.jpg" width="800" height="800" alt="캐리어를 끌고 손인사하는 평안이" loading="lazy"><span class="cap">캐리어 끌고 손인사</span></button>
+      <button class="tile tile--art s" data-cap="지도 펼치기"><img src="assets/scenes/s16.jpg" width="800" height="800" alt="지도를 펼친 평안이" loading="lazy"><span class="cap">지도 펼치기</span></button>
+      <button class="tile tile--art s" data-cap="길 확인하기"><img src="assets/scenes/s17.jpg" width="800" height="800" alt="스마트폰 지도를 확인하는 평안이" loading="lazy"><span class="cap">길 확인하기</span></button>
+      <button class="tile tile--art s" data-cap="풍경 촬영"><img src="assets/scenes/s18.jpg" width="800" height="800" alt="카메라를 들고 풍경을 찍는 평안이" loading="lazy"><span class="cap">풍경 촬영</span></button>
+      <button class="tile tile--art s" data-cap="쌍안경으로 보기"><img src="assets/scenes/s19.jpg" width="800" height="800" alt="쌍안경을 든 평안이" loading="lazy"><span class="cap">쌍안경으로 보기</span></button>
     </div>
 
     <!-- 바깥 산책 -->
@@ -519,12 +608,12 @@ footer p{margin:0;max-width:46em}
           <p>나비를 따라 달리고 강가에서 물장구를 칩니다. 물에서 온 친구라 물가에서 가장 즐거워 보입니다.</p>
         </div>
       </div>
-      <button class="tile tile--art s" data-cap="강변 풀밭길 달리기"><img src="assets/scenes/s20.jpg" alt="강변 풀밭길을 신나게 뛰는 평안이" loading="lazy"><span class="cap">강변 풀밭길 달리기</span></button>
-      <button class="tile tile--art s" data-cap="나비 따라 달리기"><img src="assets/scenes/s21.jpg" alt="나비를 따라 달리는 평안이" loading="lazy"><span class="cap">나비 따라 달리기</span></button>
-      <button class="tile tile--art s" data-cap="강가에서 물장구"><img src="assets/scenes/s22.jpg" alt="강가에서 물장구치는 평안이" loading="lazy"><span class="cap">강가에서 물장구</span></button>
-      <button class="tile tile--art s" data-cap="바위 옆을 달려서"><img src="assets/scenes/s23.jpg" alt="바위 옆을 신나게 달리는 평안이" loading="lazy"><span class="cap">바위 옆을 달려서</span></button>
-      <button class="tile tile--art s" data-cap="들꽃밭에서 두 팔 벌리기"><img src="assets/scenes/s24.jpg" alt="들꽃밭에서 두 팔을 벌리고 뛰는 평안이" loading="lazy"><span class="cap">들꽃밭에서 두 팔 벌리기</span></button>
-      <button class="tile tile--art s" data-cap="새 나무에 물 주기"><img src="assets/scenes/s25.jpg" alt="새로 심은 나무에 물을 주는 평안이" loading="lazy"><span class="cap">새 나무에 물 주기</span></button>
+      <button class="tile tile--art s" data-cap="강변 풀밭길 달리기"><img src="assets/scenes/s20.jpg" width="800" height="800" alt="강변 풀밭길을 신나게 뛰는 평안이" loading="lazy"><span class="cap">강변 풀밭길 달리기</span></button>
+      <button class="tile tile--art s" data-cap="나비 따라 달리기"><img src="assets/scenes/s21.jpg" width="800" height="800" alt="나비를 따라 달리는 평안이" loading="lazy"><span class="cap">나비 따라 달리기</span></button>
+      <button class="tile tile--art s" data-cap="강가에서 물장구"><img src="assets/scenes/s22.jpg" width="800" height="800" alt="강가에서 물장구치는 평안이" loading="lazy"><span class="cap">강가에서 물장구</span></button>
+      <button class="tile tile--art s" data-cap="바위 옆을 달려서"><img src="assets/scenes/s23.jpg" width="800" height="800" alt="바위 옆을 신나게 달리는 평안이" loading="lazy"><span class="cap">바위 옆을 달려서</span></button>
+      <button class="tile tile--art s" data-cap="들꽃밭에서 두 팔 벌리기"><img src="assets/scenes/s24.jpg" width="800" height="800" alt="들꽃밭에서 두 팔을 벌리고 뛰는 평안이" loading="lazy"><span class="cap">들꽃밭에서 두 팔 벌리기</span></button>
+      <button class="tile tile--art s" data-cap="새 나무에 물 주기"><img src="assets/scenes/s25.jpg" width="800" height="800" alt="새로 심은 나무에 물을 주는 평안이" loading="lazy"><span class="cap">새 나무에 물 주기</span></button>
     </div>
 
     <!-- 나눔의 하루 -->
@@ -536,10 +625,10 @@ footer p{margin:0;max-width:46em}
           <p>쓰레기를 줍고, 밥을 나누고, 마을을 쓸었습니다. 크게 티 내지 않고 조용히 합니다.</p>
         </div>
       </div>
-      <button class="tile tile--art s" data-cap="집게로 쓰레기 줍기"><img src="assets/scenes/s26.jpg" alt="집게로 쓰레기를 줍는 평안이" loading="lazy"><span class="cap">집게로 쓰레기 줍기</span></button>
-      <button class="tile tile--art s" data-cap="마을 청소"><img src="assets/scenes/s27.jpg" alt="마을을 청소하는 평안이" loading="lazy"><span class="cap">마을 청소</span></button>
-      <button class="tile tile--art s" data-cap="따뜻한 급식 나눔"><img src="assets/scenes/s28.jpg" alt="급식을 나누는 평안이" loading="lazy"><span class="cap">따뜻한 급식 나눔</span></button>
-      <button class="tile tile--art s" data-cap="기부 식료품 전달"><img src="assets/scenes/s29.jpg" alt="기부 식료품을 전하는 평안이" loading="lazy"><span class="cap">기부 식료품 전달</span></button>
+      <button class="tile tile--art s" data-cap="집게로 쓰레기 줍기"><img src="assets/scenes/s26.jpg" width="800" height="800" alt="집게로 쓰레기를 줍는 평안이" loading="lazy"><span class="cap">집게로 쓰레기 줍기</span></button>
+      <button class="tile tile--art s" data-cap="마을 청소"><img src="assets/scenes/s27.jpg" width="800" height="800" alt="마을을 청소하는 평안이" loading="lazy"><span class="cap">마을 청소</span></button>
+      <button class="tile tile--art s" data-cap="따뜻한 급식 나눔"><img src="assets/scenes/s28.jpg" width="800" height="800" alt="급식을 나누는 평안이" loading="lazy"><span class="cap">따뜻한 급식 나눔</span></button>
+      <button class="tile tile--art s" data-cap="기부 식료품 전달"><img src="assets/scenes/s29.jpg" width="800" height="800" alt="기부 식료품을 전하는 평안이" loading="lazy"><span class="cap">기부 식료품 전달</span></button>
     </div>
 
     <!-- 쉼과 한 끼 -->
@@ -551,11 +640,11 @@ footer p{margin:0;max-width:46em}
           <p>차 한 잔, 케이크 한 입, 국수 한 그릇. 평안이가 제일 잘하는 일입니다.</p>
         </div>
       </div>
-      <button class="tile tile--art s" data-cap="카페에서 차 한 잔"><img src="assets/scenes/s30.jpg" alt="카페에서 차를 마시는 평안이" loading="lazy"><span class="cap">카페에서 차 한 잔</span></button>
-      <button class="tile tile--art s" data-cap="케이크 한 입"><img src="assets/scenes/s31.jpg" alt="카페에서 케이크를 한 입 먹는 평안이" loading="lazy"><span class="cap">케이크 한 입</span></button>
-      <button class="tile tile--art s" data-cap="주스를 들고"><img src="assets/scenes/s32.jpg" alt="카페에서 주스를 든 평안이" loading="lazy"><span class="cap">주스를 들고</span></button>
-      <button class="tile tile--art s" data-cap="따뜻한 밥 한술"><img src="assets/scenes/s33.jpg" alt="따뜻한 밥을 한술 뜨는 평안이" loading="lazy"><span class="cap">따뜻한 밥 한술</span></button>
-      <button class="tile tile--art s" data-cap="국수 한 그릇"><img src="assets/scenes/s34.jpg" alt="식당에서 국수를 먹는 평안이" loading="lazy"><span class="cap">국수 한 그릇</span></button>
+      <button class="tile tile--art s" data-cap="카페에서 차 한 잔"><img src="assets/scenes/s30.jpg" width="800" height="800" alt="카페에서 차를 마시는 평안이" loading="lazy"><span class="cap">카페에서 차 한 잔</span></button>
+      <button class="tile tile--art s" data-cap="케이크 한 입"><img src="assets/scenes/s31.jpg" width="800" height="800" alt="카페에서 케이크를 한 입 먹는 평안이" loading="lazy"><span class="cap">케이크 한 입</span></button>
+      <button class="tile tile--art s" data-cap="주스를 들고"><img src="assets/scenes/s32.jpg" width="800" height="800" alt="카페에서 주스를 든 평안이" loading="lazy"><span class="cap">주스를 들고</span></button>
+      <button class="tile tile--art s" data-cap="따뜻한 밥 한술"><img src="assets/scenes/s33.jpg" width="800" height="800" alt="따뜻한 밥을 한술 뜨는 평안이" loading="lazy"><span class="cap">따뜻한 밥 한술</span></button>
+      <button class="tile tile--art s" data-cap="국수 한 그릇"><img src="assets/scenes/s34.jpg" width="800" height="800" alt="식당에서 국수를 먹는 평안이" loading="lazy"><span class="cap">국수 한 그릇</span></button>
       <div class="tile is-note tile--note s pad">
         <p>하루의 끝은<br>대체로 여기입니다.</p>
       </div>
@@ -570,13 +659,13 @@ footer p{margin:0;max-width:46em}
     </div>
     <div class="bento">
       <figure class="tile full is-lead sheet-full" style="margin:0">
-        <img src="assets/sheet/full.jpg" alt="평안이 상세 캐릭터 시트 전체 — 턴어라운드, 표정, 동작, 디테일, 색상, 형태 유지 원칙" loading="lazy">
+        <img src="assets/sheet/full.jpg" width="1536" height="1024" alt="평안이 상세 캐릭터 시트 전체 — 턴어라운드, 표정, 동작, 디테일, 색상, 형태 유지 원칙" loading="lazy">
       </figure>
     </div>
   </section>
 
   <footer>
-    <p>평안이는 양평군의 공식 캐릭터가 아닙니다. 양평을 아끼는 마음으로 만든 비공식 창작 캐릭터이며, 양평군 및 양춘이와는 공식적인 관계가 없습니다.</p>
+    <p>&ldquo;평안이 캐릭터&rdquo;는 AI행정앱제작소에서 만든 임의 캐릭터입니다. 양평군의 공식 캐릭터가 아니며, 양평을 아끼는 마음으로 만든 비공식 창작 캐릭터로서 양평군 및 양춘이와는 공식적인 관계가 없습니다.</p>
     <p style="margin-top:10px">이 페이지의 그림은 모두 평안이 캐릭터 시트와 장면 모음에서 가져왔습니다. 웹에서 빠르게 열리도록 크기를 줄였고, 원본 PNG는 <code>평안이캐릭터모음</code> 폴더에 그대로 있습니다.</p>
   </footer>
 </main>
@@ -604,6 +693,48 @@ function syncRowHeight(){
 syncRowHeight();
 addEventListener('resize', syncRowHeight);
 if (document.fonts && document.fonts.ready) document.fonts.ready.then(syncRowHeight);
+
+// 상단 바 — 내려간 상태 표시와, 지금 보고 있는 자리 표시
+(function(){
+  var bar   = document.querySelector('.topbar');
+  var links = Array.prototype.slice.call(document.querySelectorAll('.topnav a'));
+  var spots = links.map(function(a){ return document.getElementById(a.getAttribute('href').slice(1)); });
+  var queued = false, last = -1;
+
+  function mark(){
+    queued = false;
+    var y = window.pageYOffset || document.documentElement.scrollTop;
+    bar.classList.toggle('is-stuck', y > 8);
+
+    // 상단 바 바로 아래 선을 지난 마지막 자리가 지금 보는 자리
+    var line = bar.offsetHeight + 24;
+    var at = 0;
+    for (var i = 0; i < spots.length; i++){
+      if (spots[i] && spots[i].getBoundingClientRect().top <= line) at = i;
+    }
+    // 바닥까지 내려갔으면 마지막 자리로 못박는다
+    if (y + window.innerHeight >= document.documentElement.scrollHeight - 2) at = links.length - 1;
+
+    if (at === last) return;
+    last = at;
+    links.forEach(function(a, i){
+      if (i === at) a.setAttribute('aria-current','true');
+      else a.removeAttribute('aria-current');
+    });
+    // 좁은 화면에서 활성 항목이 잘려 있으면 보이게 끌어온다
+    var active = links[at];
+    var nav = active.parentNode;
+    if (nav.scrollWidth > nav.clientWidth + 1){
+      var left = active.offsetLeft - (nav.clientWidth - active.offsetWidth) / 2;
+      nav.scrollTo({ left: Math.max(0, left), behavior: 'smooth' });
+    }
+  }
+  function onScroll(){ if (!queued){ queued = true; requestAnimationFrame(mark); } }
+
+  addEventListener('scroll', onScroll, { passive: true });
+  addEventListener('resize', onScroll);
+  mark();
+})();
 
 // 라이트박스
 var shots   = Array.prototype.slice.call(document.querySelectorAll('.tile--art'));
