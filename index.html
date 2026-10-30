@@ -373,8 +373,10 @@ footer p{margin:0;max-width:46em}
 /* ---------- 라이트박스 ---------- */
 .lb{position:fixed;inset:0;z-index:100;display:none;place-items:center;padding:4vmin;background:color-mix(in srgb,var(--navy) 92%, transparent)}
 .lb[open]{display:grid}
-.lb-inner{max-width:min(760px,92vw);width:100%;text-align:center}
-.lb img{width:100%;height:auto;max-height:76vh;object-fit:contain;background:#fff;border:var(--line-w) solid var(--navy);border-radius:26px;margin:0 auto}
+.lb-inner{max-width:min(1440px,92vw);width:100%;text-align:center}
+/* 폭과 높이 둘 다 상한만 준다 — 칸이 그림 비율을 따라가므로
+   가로로 긴 판도, 정사각형 장면도 흰 여백 없이 꽉 찬다 */
+.lb img{width:auto;max-width:100%;height:auto;max-height:82vh;background:#fff;border:var(--line-w) solid var(--navy);border-radius:26px;margin:0 auto}
 .lb figcaption{margin-top:14px;color:#EAF6FC;font-family:"Gowun Dodum",sans-serif;font-size:1.05rem}
 .lb-close{position:absolute;top:14px;right:16px;width:44px;height:44px;border-radius:50%;border:2px solid #EAF6FC;background:transparent;color:#EAF6FC;font-size:21px;line-height:1;cursor:pointer}
 .lb-nav{position:absolute;top:50%;transform:translateY(-50%);width:48px;height:48px;border-radius:50%;border:2px solid #EAF6FC;background:transparent;color:#EAF6FC;font-size:20px;cursor:pointer}
